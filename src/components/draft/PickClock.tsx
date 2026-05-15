@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Progress } from '@/components/ui/progress'
-import { getClockColour } from '@/lib/draft-engine'
 import { cn } from '@/lib/utils'
 
 interface PickClockProps {
@@ -34,26 +32,35 @@ export function PickClock({ totalSeconds, pickStartedAt, isOnTheClock, onExpire 
   }, [pickStartedAt, totalSeconds, onExpire])
 
   const pct = (secondsLeft / totalSeconds) * 100
-  const colourClass = getClockColour(secondsLeft, totalSeconds)
+  const isLow = secondsLeft <= totalSeconds * 0.25
+  const isMid = secondsLeft <= totalSeconds * 0.5
+
+  const barColor = isLow ? '#F87171' : isMid ? '#FBBF24' : '#34D399'
+  const textColor = isLow ? '#F87171' : isMid ? '#FBBF24' : '#34D399'
 
   return (
     <div className="flex items-center gap-3">
-      <span className={cn('text-2xl font-black tabular-nums w-12 text-right', colourClass)}>
+      <span
+        className="text-2xl font-extrabold tabular-nums w-14 text-right shrink-0"
+        style={{ color: textColor, fontFamily: 'var(--font-display)' }}
+      >
         {secondsLeft}s
       </span>
       <div className="flex-1">
-        <Progress
-          value={pct}
-          className={cn(
-            'h-2 transition-all',
-            secondsLeft <= totalSeconds * 0.25 ? '[&>div]:bg-red-500' :
-            secondsLeft <= totalSeconds * 0.5  ? '[&>div]:bg-yellow-500' :
-                                                  '[&>div]:bg-green-500'
-          )}
-        />
+        <div className="h-1.5 bg-white/[0.08] rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-[width] duration-1000 ease-linear"
+            style={{ width: `${pct}%`, background: barColor }}
+          />
+        </div>
       </div>
       {isOnTheClock && (
-        <span className="text-xs font-bold text-green-600 animate-pulse">YOUR PICK</span>
+        <span
+          className="text-[10px] font-bold uppercase tracking-widest animate-pulse shrink-0"
+          style={{ color: '#E8A020' }}
+        >
+          Your Pick
+        </span>
       )}
     </div>
   )

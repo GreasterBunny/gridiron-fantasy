@@ -38,14 +38,14 @@ export const SLOT_ELIGIBILITY: Record<RosterSlot, PositionGroup[]> = {
 // ─── Position Colors ──────────────────────────────────────────────────────────
 
 export const POSITION_COLORS: Record<PositionGroup, string> = {
-  QB: 'bg-red-100 text-red-800 border-red-200',
-  RB: 'bg-green-100 text-green-800 border-green-200',
-  WR: 'bg-blue-100 text-blue-800 border-blue-200',
-  TE: 'bg-orange-100 text-orange-800 border-orange-200',
-  OL: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  DL: 'bg-purple-100 text-purple-800 border-purple-200',
-  LB: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-  DB: 'bg-pink-100 text-pink-800 border-pink-200',
+  QB: 'bg-red-500/15 text-red-400 border-red-500/30',
+  RB: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+  WR: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
+  TE: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
+  OL: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+  DL: 'bg-violet-500/15 text-violet-400 border-violet-500/30',
+  LB: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/30',
+  DB: 'bg-pink-500/15 text-pink-400 border-pink-500/30',
 }
 
 // ─── NFL Teams ────────────────────────────────────────────────────────────────

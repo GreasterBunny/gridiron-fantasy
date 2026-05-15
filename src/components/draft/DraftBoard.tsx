@@ -1,8 +1,6 @@
 'use client'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import { POSITION_COLORS } from '@/lib/constants'
 import type { DraftPick, DraftSession } from '@/lib/draft-engine'
 import type { PositionGroup } from '@/types'
@@ -20,13 +18,8 @@ export function DraftBoard({ session, picks, teams, currentUserId }: DraftBoardP
   const totalRounds = Math.ceil(picks.length / Math.max(numTeams, 1))
   const pickOrder = session.pick_order as string[]
 
-  // Map teamId → team info
   const teamMap = Object.fromEntries(teams.map(t => [t.id, t]))
-
-  // Map overall_pick → pick data
   const pickMap = Object.fromEntries(picks.map(p => [p.overall_pick, p]))
-
-  // Build grid: rows = rounds, cols = teams in snake order
   const rounds = Array.from({ length: totalRounds }, (_, r) => r + 1)
 
   return (
@@ -34,7 +27,7 @@ export function DraftBoard({ session, picks, teams, currentUserId }: DraftBoardP
       <div className="p-2">
         {/* Team header row */}
         <div
-          className="grid gap-1 mb-1"
+          className="grid gap-1 mb-1.5"
           style={{ gridTemplateColumns: `2rem repeat(${numTeams}, minmax(0,1fr))` }}
         >
           <div />
@@ -45,8 +38,10 @@ export function DraftBoard({ session, picks, teams, currentUserId }: DraftBoardP
               <div
                 key={teamId}
                 className={cn(
-                  'text-center text-[10px] font-bold truncate px-1 py-0.5 rounded',
-                  isYou ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
+                  'text-center text-[9px] font-bold truncate px-1 py-1 rounded',
+                  isYou
+                    ? 'bg-[#E8A020]/15 text-[#E8A020] border border-[#E8A020]/30'
+                    : 'bg-white/[0.05] text-[#7C8099] border border-white/[0.07]'
                 )}
               >
                 {team?.name ?? '—'}
@@ -68,12 +63,9 @@ export function DraftBoard({ session, picks, teams, currentUserId }: DraftBoardP
                 className="grid gap-1"
                 style={{ gridTemplateColumns: `2rem repeat(${numTeams}, minmax(0,1fr))` }}
               >
-                {/* Round label */}
-                <div className="flex items-center justify-center text-[10px] text-muted-foreground font-bold">
+                <div className="flex items-center justify-center text-[9px] text-[#5A6080] font-bold">
                   R{round}
                 </div>
-
-                {/* Picks for this round */}
                 {orderedTeams.map((teamId, idx) => {
                   const overall = (round - 1) * numTeams + idx + 1
                   const pick = pickMap[overall]
@@ -86,36 +78,36 @@ export function DraftBoard({ session, picks, teams, currentUserId }: DraftBoardP
                     <div
                       key={teamId}
                       className={cn(
-                        'rounded border text-[10px] p-1 min-h-[40px] flex flex-col justify-center transition-all',
-                        isCurrent && 'border-yellow-400 bg-yellow-50 ring-1 ring-yellow-400',
-                        !isCurrent && pick?.player_id && 'bg-slate-50 border-slate-200',
-                        !isCurrent && !pick?.player_id && 'border-dashed border-slate-200',
-                        isYou && pick?.player_id && 'bg-blue-50 border-blue-200',
-                        isCurrent && isYou && 'bg-yellow-100 border-yellow-500',
+                        'rounded border text-[9px] p-1 min-h-[40px] flex flex-col justify-center transition-[background-color,border-color] duration-150',
+                        isCurrent && isYou && 'border-[#E8A020] bg-[#E8A020]/10 ring-1 ring-[#E8A020]/50',
+                        isCurrent && !isYou && 'border-amber-500/40 bg-amber-500/[0.06]',
+                        !isCurrent && pick?.player_id && !isYou && 'bg-white/[0.04] border-white/[0.08]',
+                        !isCurrent && pick?.player_id && isYou && 'bg-[#E8A020]/[0.07] border-[#E8A020]/25',
+                        !isCurrent && !pick?.player_id && 'border-dashed border-white/[0.07] bg-transparent',
                       )}
                     >
                       {player ? (
                         <>
-                          <div className="flex items-center gap-0.5">
-                            <Badge
+                          <div className="flex items-center gap-0.5 mb-0.5">
+                            <span
                               className={cn(
-                                'text-[8px] px-0.5 py-0 border leading-none',
+                                'text-[7px] px-0.5 py-0 rounded border leading-none font-bold',
                                 POSITION_COLORS[player.position_group as PositionGroup]
                               )}
                             >
                               {player.position}
-                            </Badge>
+                            </span>
                           </div>
-                          <span className="font-semibold leading-tight truncate mt-0.5">
+                          <span className="font-semibold leading-tight truncate text-[#F1F3F9]">
                             {player.full_name}
                           </span>
                         </>
                       ) : isCurrent ? (
-                        <span className="text-yellow-700 font-bold animate-pulse text-center">
+                        <span className="text-[#E8A020] font-bold animate-pulse text-center text-[9px]">
                           On Clock
                         </span>
                       ) : (
-                        <span className="text-slate-300 text-center">{overall}</span>
+                        <span className="text-[#3A4060] text-center tabular-nums">{overall}</span>
                       )}
                     </div>
                   )
